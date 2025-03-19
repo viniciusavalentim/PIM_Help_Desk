@@ -21,6 +21,6 @@ namespace PIM_Help_Desk.Models
         public string PasswordHash { get; set; } = string.Empty;
 
         [Required]
-        public UserType UserType { get; set; }
+        public UserTypeEnum UserType { get; set; }
     }
 }

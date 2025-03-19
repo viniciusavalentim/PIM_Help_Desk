@@ -24,15 +24,25 @@ namespace PIM_Help_Desk.Services.AuthService
         }
 
 
-        public async Task<ServiceResponse<User>> Register(UserDto request)
+        public async Task<ServiceResponse<AuthUserDto>> Register(RegisterDto request)
         {
-            ServiceResponse<User> serviceResponse = new ServiceResponse<User>();
+            ServiceResponse<AuthUserDto> serviceResponse = new ServiceResponse<AuthUserDto>();
             try
             {
+
+                if(request.Password != request.ConfirmPassword)
+                {
+                    serviceResponse.Message = "Senhas não conhecidem.";
+                    serviceResponse.Status = false;
+                    return serviceResponse;
+                }
+
                 var newUser = new User
                 {
                     Id = Guid.NewGuid(),
                     Name = request.Name,
+                    Email = request.Email,
+                    UserType = (Enums.UserTypeEnum)3
                 };
 
                 var hashedPassword = new PasswordHasher<User>()
@@ -43,8 +53,17 @@ namespace PIM_Help_Desk.Services.AuthService
                 await _context.users.AddAsync(newUser);
                 await _context.SaveChangesAsync();
 
+                string token = CreateToken(newUser);
+
                 serviceResponse.Message = "Usuário Criado com sucesso";
-                serviceResponse.Data = newUser;
+
+                var response = new AuthUserDto
+                {
+                    token = token,
+                    User = newUser
+                };
+                
+                serviceResponse.Data = response;
                 return serviceResponse;
 
             }
@@ -57,16 +76,16 @@ namespace PIM_Help_Desk.Services.AuthService
         }
 
 
-        public async Task<ServiceResponse<string>> Login(UserDto request)
+        public async Task<ServiceResponse<AuthUserDto>> Login(LoginDto request)
         {
-            ServiceResponse<string> serviceResponse = new ServiceResponse<string>();
+            ServiceResponse<AuthUserDto> serviceResponse = new ServiceResponse<AuthUserDto>();
             try
             {
-                var user = await _context.users.FirstOrDefaultAsync(u => u.Name == request.Name);
+                var user = await _context.users.FirstOrDefaultAsync(u => u.Email == request.Email);
 
                 if (user == null)
                 {
-                    serviceResponse.Message = "Usuário não encontrado";
+                    serviceResponse.Message = "Dados inválidos. Verifique seu email ou senha.";
                     serviceResponse.Status = false;
                     return serviceResponse;
                 }
@@ -80,9 +99,17 @@ namespace PIM_Help_Desk.Services.AuthService
 
                 string token = CreateToken(user);
 
+                var response = new AuthUserDto
+                {
+                    token = token,
+                    User = user
+                };
+
+
                 serviceResponse.Message = "Usuário logado com sucesso";
                 serviceResponse.Status = true;
-                serviceResponse.Data = token;
+
+                serviceResponse.Data = response;
                 return serviceResponse;
 
             }

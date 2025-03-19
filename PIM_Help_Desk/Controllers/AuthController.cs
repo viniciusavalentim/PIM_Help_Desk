@@ -24,15 +24,27 @@ namespace PIM_Help_Desk.Controllers
 
 
         [HttpPost("register")]
-        public async Task<ActionResult<User>> Register(UserDto request)
+        public async Task<ActionResult<User>> Register(RegisterDto request)
         {
-            return Ok(await _authService.Register(request));        
+            var register = await _authService.Register(request);
+            if (register.Status)
+            {
+                return Ok(register);
+            }
+
+            return BadRequest(register);
         }
 
         [HttpPost]
-        public async Task<ActionResult<string>> Login(UserDto request)
+        public async Task<ActionResult<string>> Login(LoginDto request)
         {
-            return Ok(await _authService.Login(request));
+            var response = await _authService.Login(request);
+            if (response.Status)
+            {
+                return Ok(response);
+            }
+
+            return BadRequest(response);
         }
 
 

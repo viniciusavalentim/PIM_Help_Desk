@@ -10,5 +10,6 @@ namespace PIM_Help_Desk.Data
         }
 
         public DbSet<User> users { get; set; }
+        public DbSet<Attendant> attendant { get; set; }
     }
 }
