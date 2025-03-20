@@ -11,6 +11,7 @@ namespace PIM_Help_Desk.Models
         [Required]
         public string Name { get; set; } = string.Empty;
 
+        [Required, EmailAddress]  
         public string Email { get; set; } = string.Empty;
 
         public string Cpf { get; set; } = string.Empty;
@@ -21,6 +22,7 @@ namespace PIM_Help_Desk.Models
         public string PasswordHash { get; set; } = string.Empty;
 
         [Required]
-        public UserTypeEnum UserType { get; set; }
+        public UserTypeEnum UserType { get; set; } = UserTypeEnum.Administrator;
+        public DateTime CreatedAt { get; set; } = DateTime.Now; 
     }
 }

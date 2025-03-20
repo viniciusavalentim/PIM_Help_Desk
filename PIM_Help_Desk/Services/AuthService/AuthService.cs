@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using PIM_Help_Desk.Data;
 using PIM_Help_Desk.Dtos;
@@ -42,7 +41,7 @@ namespace PIM_Help_Desk.Services.AuthService
                     Id = Guid.NewGuid(),
                     Name = request.Name,
                     Email = request.Email,
-                    UserType = (Enums.UserTypeEnum)3
+                    UserType = Enums.UserTypeEnum.Administrator
                 };
 
                 var hashedPassword = new PasswordHasher<User>()

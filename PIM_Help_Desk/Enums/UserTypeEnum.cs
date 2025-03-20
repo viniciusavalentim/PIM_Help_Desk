@@ -2,8 +2,8 @@
 {
     public enum UserTypeEnum
     {
-        Requester = 0,
-        Attendant = 1,
-        Administrator = 2
+        Administrator = 1,
+        Attendant = 2,
+        Requester = 3,
     }
 }

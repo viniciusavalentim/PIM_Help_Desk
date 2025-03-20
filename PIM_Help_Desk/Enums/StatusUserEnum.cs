@@ -2,8 +2,8 @@
 {
     public enum StatusUserEnum
     {
-        Online = 0,
-        Offline = 1,
-        absent = 2,
+        Online = 1,
+        Offline = 2,
+        absent = 3,
     }
 }
