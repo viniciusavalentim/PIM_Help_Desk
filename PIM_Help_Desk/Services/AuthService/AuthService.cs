@@ -52,6 +52,16 @@ namespace PIM_Help_Desk.Services.AuthService
                 await _context.users.AddAsync(newUser);
                 await _context.SaveChangesAsync();
 
+                var newAdministrator = new Administrator
+                {
+                   Position = "Administrator",
+                   User = newUser,
+                   UserId = newUser.Id,
+                };
+
+                await _context.administrator.AddAsync(newAdministrator);
+                await _context.SaveChangesAsync();
+
                 string token = CreateToken(newUser);
 
                 serviceResponse.Message = "Usuário Criado com sucesso";
