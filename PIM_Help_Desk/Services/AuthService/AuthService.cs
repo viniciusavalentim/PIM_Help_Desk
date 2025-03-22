@@ -29,7 +29,18 @@ namespace PIM_Help_Desk.Services.AuthService
             try
             {
 
-                if(request.Password != request.ConfirmPassword)
+                var user = _context.users.FirstOrDefault(u => u.Email == request.Email);        
+
+                if(user?.Email == request.Email)
+                {
+                    serviceResponse.Message = "Email já cadastrado.";
+                    serviceResponse.Status = false;
+                    return serviceResponse;
+                }   
+
+
+
+                if (request.Password != request.ConfirmPassword)
                 {
                     serviceResponse.Message = "Senhas não conhecidem.";
                     serviceResponse.Status = false;
