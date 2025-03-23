@@ -82,7 +82,16 @@ namespace PIM_Help_Desk.Services.AuthService
                     token = token,
                     User = newUser
                 };
-                
+
+                var log = new Log
+                {
+                    Id = Guid.NewGuid(),
+                    UserId = newUser.Id,
+                    LogType = Enums.LogTypeEnum.register,   
+                    CreatedAt = DateTime.Now,
+                };
+
+
                 serviceResponse.Data = response;
                 return serviceResponse;
 
@@ -125,6 +134,14 @@ namespace PIM_Help_Desk.Services.AuthService
                     User = user
                 };
 
+
+                var log = new Log
+                {
+                    Id = Guid.NewGuid(),
+                    UserId = user.Id,
+                    LogType = Enums.LogTypeEnum.login,
+                    CreatedAt = DateTime.Now,
+                };
 
                 serviceResponse.Message = "Usuário logado com sucesso";
                 serviceResponse.Status = true;

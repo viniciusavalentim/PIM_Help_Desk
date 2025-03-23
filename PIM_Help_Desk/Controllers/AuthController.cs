@@ -35,7 +35,7 @@ namespace PIM_Help_Desk.Controllers
             return BadRequest(register);
         }
 
-        [HttpPost]
+        [HttpPost("login")]
         public async Task<ActionResult<string>> Login(LoginDto request)
         {
             var response = await _authService.Login(request);
