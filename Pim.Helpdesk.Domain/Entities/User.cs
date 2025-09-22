@@ -1,28 +1,35 @@
 ﻿using PIM_Help_Desk.Enums;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace PIM_Help_Desk.Models
 {
     public class User
     {
         [Key]
+        [JsonIgnore]
         public Guid Id { get; set; }
 
-        [Required]
+        //[Required]
         public string Name { get; set; } = string.Empty;
 
-        [Required, EmailAddress]  
+        [EmailAddress]  
         public string Email { get; set; } = string.Empty;
 
         public string Cpf { get; set; } = string.Empty;
-
+                    
         public string Phone { get; set; } = string.Empty;
 
-        [Required]
+        //[Required]
+        [JsonIgnore]
         public string PasswordHash { get; set; } = string.Empty;
 
-        [Required]
-        public UserTypeEnum UserType { get; set; } = UserTypeEnum.Administrator;
-        public DateTime CreatedAt { get; set; } = DateTime.Now; 
+        public string Position { get; set; } = string.Empty;
+
+        public StatusUserEnum Status { get; set; }
+
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
+
+        public UserTypeEnum UserType { get; set; } = UserTypeEnum.Requester;
     }
 }

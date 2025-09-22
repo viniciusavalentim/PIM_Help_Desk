@@ -1,7 +1,9 @@
 using Microsoft.EntityFrameworkCore;
-using PIM_Help_Desk.Data;
+using Pim.Helpdesk;
+using Pim.Helpdesk.Infrastructure.Context;
 using PIM_Help_Desk.Services.AuthService;
 using Scalar.AspNetCore;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,15 +17,13 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Adicionando outros serviços
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+Bootstrapper.RegisterServices(builder.Services);
+
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
-builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-});
 
 var app = builder.Build();
 

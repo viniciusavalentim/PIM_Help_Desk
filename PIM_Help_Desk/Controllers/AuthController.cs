@@ -1,13 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using PIM_Help_Desk.Dtos;
-using PIM_Help_Desk.Models;
-using PIM_Help_Desk.Services.AuthService;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
+using Pim.Helpdesk.Infrastructure.Data.Query.Queries.Users;
 
 namespace PIM_Help_Desk.Controllers
 {
@@ -15,38 +8,41 @@ namespace PIM_Help_Desk.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly IAuthService _authService;
+        private readonly IMediator _mediator;
 
-        public AuthController(IAuthService authService)
+        public AuthController(IMediator mediator)
         {
-            _authService = authService;
+            _mediator = mediator;
         }
 
-
-        [HttpPost("register")]
-        public async Task<ActionResult<User>> Register(RegisterDto request)
+        [HttpGet("getAllUsers")]
+        public async Task<GetUsersQueryResponse> GetUsers()
         {
-            var register = await _authService.Register(request);
-            if (register.Status)
-            {
-                return Ok(register);
-            }
-
-            return BadRequest(register);
+            return await _mediator.Send(new GetUsersQuery());
         }
 
-        [HttpPost("login")]
-        public async Task<ActionResult<string>> Login(LoginDto request)
-        {
-            var response = await _authService.Login(request);
-            if (response.Status)
-            {
-                return Ok(response);
-            }
+        //[HttpPost("register")]
+        //public async Task<ActionResult<User>> Register(RegisterDto request)
+        //{
+        //    //var register = await _authService.Register(request);
+        //    //if (register.Status)
+        //    //{
+        //    //    return Ok(register);
+        //    //}
 
-            return BadRequest(response);
-        }
+        //    //return BadRequest(register);
+        //}
 
+        //[HttpPost("login")]
+        //public async Task<ActionResult<string>> Login(LoginDto request)
+        //{
+        //    var response = await _mediator.Send().Login(request);
+        //    if (response.Status)
+        //    {
+        //        return Ok(response);
+        //    }
 
+        //    return BadRequest(response);
+        //}
     }
 }

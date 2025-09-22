@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using PIM_Help_Desk.Data;
 using PIM_Help_Desk.Dtos;
 using PIM_Help_Desk.Models;
 using System.IdentityModel.Tokens.Jwt;
@@ -12,13 +11,13 @@ namespace PIM_Help_Desk.Services.AuthService
 {
     public class AuthService : IAuthService
     {
-        private readonly ApplicationDbContext _context;
+        //private readonly ApplicationDbContext _context;
         private readonly IConfiguration _configuration;
 
 
-        public AuthService(ApplicationDbContext context, IConfiguration configuration)
+        public AuthService(IConfiguration configuration)
         {
-            _context = context;
+            //_context = context;
             _configuration = configuration;
         }
 
@@ -26,80 +25,81 @@ namespace PIM_Help_Desk.Services.AuthService
         public async Task<ServiceResponse<AuthUserDto>> Register(RegisterDto request)
         {
             ServiceResponse<AuthUserDto> serviceResponse = new ServiceResponse<AuthUserDto>();
-            try
-            {
+            //try
+            //{
 
-                var user = _context.users.FirstOrDefault(u => u.Email == request.Email);        
+            //    var user = "";        
+            //    //var user = _context.users.FirstOrDefault(u => u.Email == request.Email);        
 
-                if(user?.Email == request.Email)
-                {
-                    serviceResponse.Message = "Email já cadastrado.";
-                    serviceResponse.Status = false;
-                    return serviceResponse;
-                }   
-
-
-
-                if (request.Password != request.ConfirmPassword)
-                {
-                    serviceResponse.Message = "Senhas não conhecidem.";
-                    serviceResponse.Status = false;
-                    return serviceResponse;
-                }
-
-                var newUser = new User
-                {
-                    Id = Guid.NewGuid(),
-                    Name = request.Name,
-                    Email = request.Email,
-                    UserType = Enums.UserTypeEnum.Administrator
-                };
-
-                var hashedPassword = new PasswordHasher<User>()
-               .HashPassword(newUser, request.Password);
-
-                newUser.PasswordHash = hashedPassword;
-
-                await _context.users.AddAsync(newUser);
-                await _context.SaveChangesAsync();
-
-                var newAdministrator = new Administrator
-                {
-                   Position = "Administrator",
-                   User = newUser,
-                   UserId = newUser.Id,
-                };
-
-                await _context.administrator.AddAsync(newAdministrator);
-                await _context.SaveChangesAsync();
-
-                string token = CreateToken(newUser);
-
-                serviceResponse.Message = "Usuário Criado com sucesso";
-
-                var response = new AuthUserDto
-                {
-                    token = token,
-                    User = newUser
-                };
-
-                var log = new Log
-                {
-                    Id = Guid.NewGuid(),
-                    UserId = newUser.Id,
-                    LogType = Enums.LogTypeEnum.register,   
-                    CreatedAt = DateTime.Now,
-                };
+            //    if(user?.Email == request.Email)
+            //    {
+            //        serviceResponse.Message = "Email já cadastrado.";
+            //        serviceResponse.Status = false;
+            //        return serviceResponse;
+            //    }   
 
 
-                serviceResponse.Data = response;
-                return serviceResponse;
 
-            }
-            catch (Exception ex)
-            {
-                serviceResponse.Message = ex.Message;
-            }
+            //    if (request.Password != request.ConfirmPassword)
+            //    {
+            //        serviceResponse.Message = "Senhas não conhecidem.";
+            //        serviceResponse.Status = false;
+            //        return serviceResponse;
+            //    }
+
+            //    var newUser = new User
+            //    {
+            //        Id = Guid.NewGuid(),
+            //        Name = request.Name,
+            //        Email = request.Email,
+            //        UserType = Enums.UserTypeEnum.Administrator
+            //    };
+
+            //    var hashedPassword = new PasswordHasher<User>()
+            //   .HashPassword(newUser, request.Password);
+
+            //    newUser.PasswordHash = hashedPassword;
+
+            //    await _context.users.AddAsync(newUser);
+            //    await _context.SaveChangesAsync();
+
+            //    var newAdministrator = new Administrator
+            //    {
+            //       Position = "Administrator",
+            //       User = newUser,
+            //       UserId = newUser.Id,
+            //    };
+
+            //    await _context.administrator.AddAsync(newAdministrator);
+            //    await _context.SaveChangesAsync();
+
+            //    string token = CreateToken(newUser);
+
+            //    serviceResponse.Message = "Usuário Criado com sucesso";
+
+            //    var response = new AuthUserDto
+            //    {
+            //        token = token,
+            //        User = newUser
+            //    };
+
+            //    var log = new Log
+            //    {
+            //        Id = Guid.NewGuid(),
+            //        UserId = newUser.Id,
+            //        LogType = Enums.LogTypeEnum.register,   
+            //        CreatedAt = DateTime.Now,
+            //    };
+
+
+            //    serviceResponse.Data = response;
+            //    return serviceResponse;
+
+            //}
+            //catch (Exception ex)
+            //{
+            //    serviceResponse.Message = ex.Message;
+            //}
 
             return serviceResponse;
         }
@@ -108,53 +108,53 @@ namespace PIM_Help_Desk.Services.AuthService
         public async Task<ServiceResponse<AuthUserDto>> Login(LoginDto request)
         {
             ServiceResponse<AuthUserDto> serviceResponse = new ServiceResponse<AuthUserDto>();
-            try
-            {
-                var user = await _context.users.FirstOrDefaultAsync(u => u.Email == request.Email);
+            //try
+            //{
+            //    var user = await _context.users.FirstOrDefaultAsync(u => u.Email == request.Email);
 
-                if (user == null)
-                {
-                    serviceResponse.Message = "Dados inválidos. Verifique seu email ou senha.";
-                    serviceResponse.Status = false;
-                    return serviceResponse;
-                }
+            //    if (user == null)
+            //    {
+            //        serviceResponse.Message = "Dados inválidos. Verifique seu email ou senha.";
+            //        serviceResponse.Status = false;
+            //        return serviceResponse;
+            //    }
 
-                if (new PasswordHasher<User>().VerifyHashedPassword(user, user.PasswordHash, request.Password) == PasswordVerificationResult.Failed)
-                {
-                    serviceResponse.Message = "Dados incorretos.";
-                    serviceResponse.Status = false;
-                    return serviceResponse;
-                }
+            //    if (new PasswordHasher<User>().VerifyHashedPassword(user, user.PasswordHash, request.Password) == PasswordVerificationResult.Failed)
+            //    {
+            //        serviceResponse.Message = "Dados incorretos.";
+            //        serviceResponse.Status = false;
+            //        return serviceResponse;
+            //    }
 
-                string token = CreateToken(user);
+            //    string token = CreateToken(user);
 
-                var response = new AuthUserDto
-                {
-                    token = token,
-                    User = user
-                };
+            //    var response = new AuthUserDto
+            //    {
+            //        token = token,
+            //        User = user
+            //    };
 
 
-                var log = new Log
-                {
-                    Id = Guid.NewGuid(),
-                    UserId = user.Id,
-                    LogType = Enums.LogTypeEnum.login,
-                    CreatedAt = DateTime.Now,
-                };
+            //    var log = new Log
+            //    {
+            //        Id = Guid.NewGuid(),
+            //        UserId = user.Id,
+            //        LogType = Enums.LogTypeEnum.login,
+            //        CreatedAt = DateTime.Now,
+            //    };
 
-                serviceResponse.Message = "Usuário logado com sucesso";
-                serviceResponse.Status = true;
+            //    serviceResponse.Message = "Usuário logado com sucesso";
+            //    serviceResponse.Status = true;
 
-                serviceResponse.Data = response;
-                return serviceResponse;
+            //    serviceResponse.Data = response;
+            //    return serviceResponse;
 
-            }
-            catch (Exception ex)
-            {
-                serviceResponse.Message = ex.Message;
-                serviceResponse.Status = false;
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    serviceResponse.Message = ex.Message;
+            //    serviceResponse.Status = false;
+            //}
 
             return serviceResponse;
         }
