@@ -1,4 +1,6 @@
-﻿using Pim.Helpdesk.Domain.Interfaces.Repositories;
+﻿using Microsoft.EntityFrameworkCore;
+using Pim.Helpdesk.Domain.Interfaces.Repositories;
+using PIM_Help_Desk.Models;
 
 namespace Pim.Helpdesk.Infrastructure.Context.Repositories
 {
@@ -11,6 +13,18 @@ namespace Pim.Helpdesk.Infrastructure.Context.Repositories
             _context = context;
         }
 
+
+        public async Task<bool> UserExists(string email)
+        {
+            return await Task.FromResult(_context.Users.Any(u => u.Email == email));
+        }
+
+        public async Task<List<User>> GetAllUsers()
+        {
+            List<User> users = await _context.Users.ToListAsync();
+
+            return users;
+        }
 
     }
 }

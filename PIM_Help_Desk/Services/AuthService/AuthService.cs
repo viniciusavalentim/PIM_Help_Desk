@@ -1,10 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+﻿using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
-using PIM_Help_Desk.Dtos;
-using PIM_Help_Desk.Models;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using PIM_Help_Desk.Models;
+using PIM_Help_Desk.Dtos;
 using System.Text;
 
 namespace PIM_Help_Desk.Services.AuthService

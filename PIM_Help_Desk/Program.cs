@@ -12,8 +12,8 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowAllOrigins", policy =>
     {
         policy.AllowAnyOrigin()
-              .AllowAnyHeader() 
-              .AllowAnyMethod(); 
+              .AllowAnyHeader()
+              .AllowAnyMethod();
     });
 });
 
@@ -29,8 +29,10 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.MapScalarApiReference();
     app.MapOpenApi();
+
+    app.MapScalarApiReference("/scalar/v1");
+
 }
 
 app.UseCors("AllowAllOrigins");
