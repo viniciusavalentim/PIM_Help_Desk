@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Pim.Helpdesk.Infrastructure.Data.Query.Queries.Users;
+using Pim.Helpdesk.Domain.Command.Login;
 
 namespace PIM_Help_Desk.Controllers
 {
@@ -15,11 +15,29 @@ namespace PIM_Help_Desk.Controllers
             _mediator = mediator;
         }
 
-        [HttpGet("getAllUsers")]
-        public async Task<GetUsersQueryResponse> GetUsers()
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginCommand command)
         {
-            return await _mediator.Send(new GetUsersQuery());
+            var result = await _mediator.Send(command);
+            if (!result.Success) return Unauthorized(result);
+
+            return Ok(result);
         }
+
+        //[HttpPost("register")]
+        //public async Task<IActionResult> Register(RegisterUserCommand command)
+        //{
+        //    var result = await _mediator.Send(command);
+        //    if (!result.Success) return BadRequest(result.Message);
+
+        //    return Ok(result.Message);
+        //}
+
+        //[HttpGet("getAllUsers")]
+        //public async Task<GetUsersQueryResponse> GetUsers()
+        //{
+        //    return await _mediator.Send(new GetUsersQuery());
+        //}
 
         //[HttpPost("register")]
         //public async Task<ActionResult<User>> Register(RegisterDto request)

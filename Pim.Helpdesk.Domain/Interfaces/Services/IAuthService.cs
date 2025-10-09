@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Pim.Helpdesk.Domain.Interfaces.Services
+﻿namespace Pim.Helpdesk.Domain.Interfaces.Services
 {
-    internal interface IAuthService
+    public interface IAuthService
     {
+        Task<bool> Login(string email, string password);
     }
 }

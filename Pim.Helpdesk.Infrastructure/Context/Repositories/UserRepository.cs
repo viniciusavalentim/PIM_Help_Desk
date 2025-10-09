@@ -13,18 +13,15 @@ namespace Pim.Helpdesk.Infrastructure.Context.Repositories
             _context = context;
         }
 
-
-        public async Task<bool> UserExists(string email)
+        public async Task<User> UserExists(string email)
         {
-            return await Task.FromResult(_context.Users.Any(u => u.Email == email));
+            return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
         }
 
         public async Task<List<User>> GetAllUsers()
         {
             List<User> users = await _context.Users.ToListAsync();
-
             return users;
         }
-
     }
 }
