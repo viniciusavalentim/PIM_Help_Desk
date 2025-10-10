@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Pim.Helpdesk.Domain.Command.Register
+﻿namespace Pim.Helpdesk.Domain.Command.Register
 {
-    internal class RegisterCommandResponse
+    public class RegisterCommandResponse
     {
+        public bool Success { get; set; }
+        public string? Token { get; set; }
+        public string? Message { get; set; }
     }
 }

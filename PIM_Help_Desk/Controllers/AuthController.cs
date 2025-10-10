@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Pim.Helpdesk.Domain.Command.Login;
+using Pim.Helpdesk.Domain.Command.Register;
 
 namespace PIM_Help_Desk.Controllers
 {
@@ -24,43 +25,19 @@ namespace PIM_Help_Desk.Controllers
             return Ok(result);
         }
 
-        //[HttpPost("register")]
-        //public async Task<IActionResult> Register(RegisterUserCommand command)
-        //{
-        //    var result = await _mediator.Send(command);
-        //    if (!result.Success) return BadRequest(result.Message);
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] RegisterCommand command)
+        {
+            var result = await _mediator.Send(command);
+            if (!result.Success) return BadRequest(result);
 
-        //    return Ok(result.Message);
-        //}
+            return Ok(result);
+        }
 
         //[HttpGet("getAllUsers")]
         //public async Task<GetUsersQueryResponse> GetUsers()
         //{
         //    return await _mediator.Send(new GetUsersQuery());
-        //}
-
-        //[HttpPost("register")]
-        //public async Task<ActionResult<User>> Register(RegisterDto request)
-        //{
-        //    //var register = await _authService.Register(request);
-        //    //if (register.Status)
-        //    //{
-        //    //    return Ok(register);
-        //    //}
-
-        //    //return BadRequest(register);
-        //}
-
-        //[HttpPost("login")]
-        //public async Task<ActionResult<string>> Login(LoginDto request)
-        //{
-        //    var response = await _mediator.Send().Login(request);
-        //    if (response.Status)
-        //    {
-        //        return Ok(response);
-        //    }
-
-        //    return BadRequest(response);
         //}
     }
 }

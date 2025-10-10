@@ -23,7 +23,7 @@ namespace Pim.Helpdesk.Domain.Command.Login
                 if (loginResult)
                 {
                     response.Success = true;
-                    response.Token = JwtTokenGenerator.GenerateToken(request.Email); ;
+                    response.Token = JwtTokenGenerator.GenerateToken(request.Email);
                     response.Message = "Login successful.";
                 }
                 else
