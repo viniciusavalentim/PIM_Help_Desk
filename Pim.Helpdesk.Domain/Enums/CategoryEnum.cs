@@ -2,6 +2,6 @@
 {
     public enum CategoryEnum
     {
-        devices
+        devices = 1
     }
 }

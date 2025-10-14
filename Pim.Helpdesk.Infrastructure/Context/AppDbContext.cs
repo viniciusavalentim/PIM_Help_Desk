@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Pim.Helpdesk.Domain.Entities;
 using PIM_Help_Desk.Models;
 
 namespace Pim.Helpdesk.Infrastructure.Context
@@ -8,6 +9,9 @@ namespace Pim.Helpdesk.Infrastructure.Context
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
         }
+
+        public DbSet<Conversation> Conversations { get; set; }
+        public DbSet<ChatMessage> ChatMessages { get; set; }
         public DbSet<User> Users { get; set; } = null!;
         public DbSet<Ticket> Tickets { get; set; } = null!;
         public DbSet<TicketResponse> TicketResponses { get; set; } = null!;
@@ -64,6 +68,34 @@ namespace Pim.Helpdesk.Infrastructure.Context
                 .WithMany()
                 .HasForeignKey(tr => tr.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Conversation>(entity =>
+            {
+                entity.ToTable("Conversations");
+                entity.HasKey(c => c.Id);
+
+                entity.Property(c => c.Title).IsRequired().HasMaxLength(250);
+                entity.Property(c => c.UserId).IsRequired();
+
+                entity.HasIndex(c => c.UserId);
+
+                entity.HasMany(c => c.Messages)             
+                      .WithOne(m => m.Conversation)         
+                      .HasForeignKey(m => m.ConversationId) 
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<ChatMessage>(entity =>
+            {
+                entity.ToTable("ChatMessages");
+                entity.HasKey(m => m.Id);
+
+                entity.Property(m => m.Role).IsRequired().HasMaxLength(10);
+                entity.Property(m => m.Content).IsRequired();
+
+                entity.HasIndex(m => m.ConversationId);
+            });
+
         }
     }
 }

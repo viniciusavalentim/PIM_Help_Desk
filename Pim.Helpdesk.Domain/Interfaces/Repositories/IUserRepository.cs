@@ -7,5 +7,7 @@ namespace Pim.Helpdesk.Domain.Interfaces.Repositories
         Task<User> UserExists(string email);
         Task<List<User>> GetAllUsers();
         Task<bool> RegisterUser(string name, string email, string password);
+        Task<User> GetUser(Guid userId);
+        Task<User> GetUserByEmail(string email);
     }
 }

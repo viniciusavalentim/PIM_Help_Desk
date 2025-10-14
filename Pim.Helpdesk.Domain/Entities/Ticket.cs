@@ -21,11 +21,11 @@ namespace PIM_Help_Desk.Models
 
         [ForeignKey("Requester")]
         public Guid RequesterId { get; set; }
-        public User Requester { get; set; } = null!;
+        public Requester Requester { get; set; } = null!;
 
         [ForeignKey("Attendant")]
         public Guid? AttendantId { get; set; }
-        public User? Attendant { get; set; }
+        public Attendant? Attendant { get; set; }
 
     }
 }

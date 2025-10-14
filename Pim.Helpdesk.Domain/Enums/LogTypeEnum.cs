@@ -2,10 +2,10 @@
 {
     public enum LogTypeEnum
     {
-        login,
-        logout,
-        register,
-        ticket,
-        report
+        login = 1,
+        logout = 2,
+        register = 3,
+        ticket = 4,
+        report = 5
     }
 }

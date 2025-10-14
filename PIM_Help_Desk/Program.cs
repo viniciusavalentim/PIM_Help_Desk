@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using OpenAI;
 using Pim.Helpdesk;
 using Pim.Helpdesk.Infrastructure.Context;
-using PIM_Help_Desk.Services.AuthService;
 using Scalar.AspNetCore;
 
 
@@ -24,6 +24,8 @@ Bootstrapper.RegisterServices(builder.Services);
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
+builder.Services.AddHttpClient();
+
 
 var app = builder.Build();
 

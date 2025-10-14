@@ -2,6 +2,7 @@
 using MediatR;
 using Pim.Helpdesk.Domain.Interfaces.Repositories;
 using Pim.Helpdesk.Domain.Shared;
+using PIM_Help_Desk.Models;
 
 namespace Pim.Helpdesk.Domain.Command.Register
 {
@@ -34,12 +35,15 @@ namespace Pim.Helpdesk.Domain.Command.Register
 
                 if (registerUser)
                 {
+                    var user = await _userRepository.GetUserByEmail(command.Email);
+                    response.User = user;
                     response.Token = JwtTokenGenerator.GenerateToken(command.Email);
                     response.Success = true;
                     response.Message = "Usuário cadastrado com sucesso";
                 }
                 else
                 {
+                    response.User = null;
                     response.Success = false;
                     response.Message = "Usuário não cadastrado";
                     response.Token = null;
@@ -48,6 +52,7 @@ namespace Pim.Helpdesk.Domain.Command.Register
             }
             catch (Exception ex)
             {
+                response.User = null;
                 response.Success = false;
                 response.Message = ex.Message;
                 response.Token = null;

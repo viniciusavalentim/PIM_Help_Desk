@@ -7,7 +7,6 @@ namespace PIM_Help_Desk.Models
     public class User
     {
         [Key]
-        [JsonIgnore]
         public Guid Id { get; set; }
 
         //[Required]

@@ -217,6 +217,64 @@ namespace Pim.Helpdesk.Infrastructure.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("Pim.Helpdesk.Domain.Entities.ChatMessage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ConversationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<int>("Sequence")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ConversationId");
+
+                    b.ToTable("ChatMessages", (string)null);
+                });
+
+            modelBuilder.Entity("Pim.Helpdesk.Domain.Entities.Conversation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Conversations", (string)null);
+                });
+
             modelBuilder.Entity("PIM_Help_Desk.Models.Administrator", b =>
                 {
                     b.HasOne("PIM_Help_Desk.Models.User", "User")
@@ -263,12 +321,12 @@ namespace Pim.Helpdesk.Infrastructure.Migrations
 
             modelBuilder.Entity("PIM_Help_Desk.Models.Ticket", b =>
                 {
-                    b.HasOne("PIM_Help_Desk.Models.User", "Attendant")
+                    b.HasOne("PIM_Help_Desk.Models.Attendant", "Attendant")
                         .WithMany()
                         .HasForeignKey("AttendantId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("PIM_Help_Desk.Models.User", "Requester")
+                    b.HasOne("PIM_Help_Desk.Models.Requester", "Requester")
                         .WithMany()
                         .HasForeignKey("RequesterId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -298,9 +356,25 @@ namespace Pim.Helpdesk.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Pim.Helpdesk.Domain.Entities.ChatMessage", b =>
+                {
+                    b.HasOne("Pim.Helpdesk.Domain.Entities.Conversation", "Conversation")
+                        .WithMany("Messages")
+                        .HasForeignKey("ConversationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Conversation");
+                });
+
             modelBuilder.Entity("PIM_Help_Desk.Models.Ticket", b =>
                 {
                     b.Navigation("TicketResponses");
+                });
+
+            modelBuilder.Entity("Pim.Helpdesk.Domain.Entities.Conversation", b =>
+                {
+                    b.Navigation("Messages");
                 });
 #pragma warning restore 612, 618
         }

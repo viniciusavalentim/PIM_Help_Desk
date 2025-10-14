@@ -31,6 +31,14 @@ namespace Pim.Helpdesk.Infrastructure.Context.Repositories
                     UserType = PIM_Help_Desk.Enums.UserTypeEnum.Requester
                 };
 
+                var newRequester = new Requester
+                {
+                    User = newUser,
+                    UserId = newUser.Id,
+                    Department = "TI"
+                };
+
+                await _context.Requesters.AddAsync(newRequester);
                 await _context.Users.AddAsync(newUser);
                 await _context.SaveChangesAsync();
 
@@ -46,6 +54,34 @@ namespace Pim.Helpdesk.Infrastructure.Context.Repositories
         {
             List<User> users = await _context.Users.ToListAsync();
             return users;
+        }
+
+        public async Task<User> GetUser(Guid userId)
+        {
+            try
+            {
+                var user = await _context.Users.FindAsync(userId);
+                if (user == null) return null;
+                return user;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<User> GetUserByEmail(string email)
+        {
+            try
+            {
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+                if (user == null) return null;
+                return user;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
     }
 }

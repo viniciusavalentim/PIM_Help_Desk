@@ -2,9 +2,9 @@
 {
     public enum StatusTicketEnum
     {
-        pending,
-        in_progress,
-        resolved,
-        canceled
+        pending = 1,
+        in_progress = 2,
+        resolved = 3,
+        canceled = 4
     }
 }
