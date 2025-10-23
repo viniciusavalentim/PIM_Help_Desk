@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Runtime.Intrinsics.X86;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
@@ -89,7 +90,7 @@ namespace Pim.Helpdesk.Domain.Command.ChatRequest
                     Candidates = geminiApiResponse?.Candidates ?? new List<Candidate>()
                 };
             }
-             catch (Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError(ex, "Ocorreu uma exceção inesperada ao chamar a API do Gemini.");
                 return new ChatRequestCommandResponse();
@@ -107,7 +108,26 @@ namespace Pim.Helpdesk.Domain.Command.ChatRequest
                 contentList.Add(new GeminiContent(role, new[] { new GeminiPart(message.Content) }));
             }
 
-            contentList.Add(new GeminiContent("user", new[] { new GeminiPart(request.Message) }));
+            var systemInstruction = @"
+                Você é Sabiá, um assistente virtual de help desk.Sua principal função é
+                ajudar os usuários a resolverem suas dúvidas de forma clara e direta.
+
+                REGRAS IMPORTANTES:
+                1.  **Seja Conciso**: Forneça respostas curtas e objetivas, com no máximo
+                    três parágrafos.Vá direto ao ponto.
+                2.  **Foco no Help Desk**: Responda apenas a perguntas relacionadas a suporte,
+                    dúvidas sobre o sistema, ou problemas técnicos.Se o usuário perguntar
+                    sobre outros assuntos (como o tempo, filosofia, etc.), recuse educadamente
+                    e redirecione para o tema de suporte.
+                3.  **Tom Amigável e Profissional**: Mantenha um tom prestativo e cordial.
+                4.  **Não invente informações**: Se não souber a resposta, diga que não
+                    possui essa informação e oriente o usuário a procurar um canal de
+                    suporte humano.
+
+                Mensagem de ajuda do usuário:
+            " + $"  {request.Message}";
+
+            contentList.Add(new GeminiContent("user", new[] { new GeminiPart(systemInstruction) }));
 
             return new GeminiRequestPayload(contentList.ToArray());
         }
