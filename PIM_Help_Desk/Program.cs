@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore;
 using OpenAI;
 using Pim.Helpdesk;
 using Pim.Helpdesk.Infrastructure.Context;

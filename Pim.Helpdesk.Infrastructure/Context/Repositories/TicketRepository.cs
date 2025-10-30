@@ -173,7 +173,7 @@ namespace Pim.Helpdesk.Infrastructure.Context.Repositories
             try
             {
                 IQueryable<Ticket> query = _context.Tickets
-                                           .Include(t => t.TicketResponses);
+                                           .Include(t => t.TicketResponses).ThenInclude(x => x.User);
 
                 if (requesterId.HasValue)
                 {
@@ -227,12 +227,14 @@ namespace Pim.Helpdesk.Infrastructure.Context.Repositories
                      RequesterId = ticket.RequesterId,
                      AttendantId = ticket.AttendantId,
                      TicketResponses = ticket.TicketResponses
+                         .OrderByDescending(r => r.CreatedAt)
                          .Select(response => new TicketResponseDto
                          {
                              Id = response.Id,
                              Description = response.Description,
                              CreatedAt = response.CreatedAt,
-                             UserId = response.UserId
+                             UserId = response.UserId,
+                             User = response.User
                          }).ToList()
                  })
                  .ToListAsync();
