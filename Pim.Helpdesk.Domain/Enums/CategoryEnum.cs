@@ -2,6 +2,11 @@
 {
     public enum CategoryEnum
     {
-        devices = 1
+        TechnicalSupport = 1,   // Suporte Técnico
+        Infrastructure = 2,     // Infraestrutura
+        Software = 3,           // Software
+        Hardware = 4,           // Hardware
+        Network = 5             // Rede
     }
 }
+

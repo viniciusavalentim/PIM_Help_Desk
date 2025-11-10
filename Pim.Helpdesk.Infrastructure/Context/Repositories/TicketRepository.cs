@@ -140,8 +140,11 @@ namespace Pim.Helpdesk.Infrastructure.Context.Repositories
                         Priority = ticket.Priority,
                         Category = ticket.Category,
                         CreatedAt = ticket.CreatedAt,
-                        RequesterId = ticket.RequesterId,
-                        AttendantId = ticket.AttendantId,
+                        Requester = _context.Users
+                                     .FirstOrDefault(u => u.Id == ticket.RequesterId),
+
+                        Attendant = _context.Users
+                                     .FirstOrDefault(u => u.Id == ticket.AttendantId),
                         TicketResponses = ticket.TicketResponses
                             .Select(response => new TicketResponseDto
                             {
@@ -162,18 +165,18 @@ namespace Pim.Helpdesk.Infrastructure.Context.Repositories
         }
 
         public async Task<List<TicketDto>> GetTickets(
-            Guid? requesterId,
-            Guid? attendantId,
-            string? searchText,
-            int? priority,
-            int? status,
-            DateTime? startDate,
-            DateTime? endDate)
+        Guid? requesterId,
+        Guid? attendantId,
+        string? searchText,
+        int? priority,
+        int? status,
+        DateTime? startDate,
+        DateTime? endDate)
         {
             try
             {
                 IQueryable<Ticket> query = _context.Tickets
-                                           .Include(t => t.TicketResponses).ThenInclude(x => x.User);
+                    .Include(t => t.TicketResponses).ThenInclude(x => x.User);
 
                 if (requesterId.HasValue)
                 {
@@ -224,8 +227,11 @@ namespace Pim.Helpdesk.Infrastructure.Context.Repositories
                      Priority = ticket.Priority,
                      Category = ticket.Category,
                      CreatedAt = ticket.CreatedAt,
-                     RequesterId = ticket.RequesterId,
-                     AttendantId = ticket.AttendantId,
+                     Requester = _context.Users
+                                     .FirstOrDefault(u => u.Id == ticket.RequesterId),
+
+                     Attendant = _context.Users
+                                     .FirstOrDefault(u => u.Id == ticket.AttendantId),
                      TicketResponses = ticket.TicketResponses
                          .OrderByDescending(r => r.CreatedAt)
                          .Select(response => new TicketResponseDto
@@ -237,6 +243,7 @@ namespace Pim.Helpdesk.Infrastructure.Context.Repositories
                              User = response.User
                          }).ToList()
                  })
+                 .AsNoTracking()
                  .ToListAsync();
             }
             catch (Exception ex)

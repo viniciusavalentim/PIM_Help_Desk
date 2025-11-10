@@ -21,8 +21,8 @@ namespace Pim.Helpdesk.Domain.Dto
         public PriorityEnum Priority { get; set; }
         public CategoryEnum Category { get; set; }
         public DateTime CreatedAt { get; set; }
-        public Guid RequesterId { get; set; }
-        public Guid? AttendantId { get; set; }
+        public User? Requester { get; set; }
+        public User? Attendant { get; set; }
         public List<TicketResponseDto> TicketResponses { get; set; } = new();
     }
 }
